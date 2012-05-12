@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="instructions">Instructions:\n
+        1) Press the button\n
+        2) Grant SuperUser permissions to the app\n
+        3) Wait a few seconds\n
+        4) Get your unlock code\n</string>
+    <string name="app_name">SGS4G Carrier Unlocker</string>
+    <string name="button">Get Unlock Code</string>
+    <string name="outputFile">/sdcard/unlockcode.txt</string>
+    <string name="nvDataFile">/efs/root/afs/settings/nv_data.bin</string>
+    <string name="nvDataTempFile">/sdcard/nv_data.bin</string>
+    <string name="unlockCodeFound">Your carrier unlock code was found:</string>
+    <string name="unlockCodeSaved">Your unlock code has been saved to:</string>
+    <string name="unlockCodeNotSaved">Your unlock code could not be saved to SD card</string>
+    <string name="unlockCodeNotFound">Your unlock code could not be found</string>
+
+</resources>
