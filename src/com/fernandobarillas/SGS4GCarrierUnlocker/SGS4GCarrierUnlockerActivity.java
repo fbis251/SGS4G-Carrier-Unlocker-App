@@ -13,13 +13,17 @@ import java.util.regex.PatternSyntaxException;
 import com.fernandobarillas.SGS4GCarrierUnlocker.Shell;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class SGS4GCarrierUnlockerActivity extends Activity {
+public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
+	String pleaseWait;
 	String outputFile;
 	String nvDataFile;
 	String nvDataTempFile;
@@ -28,6 +32,9 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 	String unlockCodeSaved;
 	String unlockCodeNotSaved;
 	String unlockCode;
+	String resultText;
+	ProgressDialog pd;
+	TextView tv;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -36,6 +43,7 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		setContentView(R.layout.main);
 
 		// Initialize variables
+		pleaseWait = getString(R.string.pleaseWait);
 		outputFile = getString(R.string.outputFile);
 		nvDataFile = getString(R.string.nvDataFile);
 		nvDataTempFile = getString(R.string.nvDataTempFile);
@@ -44,31 +52,61 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		unlockCodeSaved = getString(R.string.unlockCodeSaved);
 		unlockCodeNotSaved = getString(R.string.unlockCodeNotSaved);
 
+		// Set the resultText view for use by other methods
+		tv = (TextView) this.findViewById(R.id.resultText);
+
+		// This is our main button! Basically only here so the user will need to
+		// do something before the superuser request
 		final Button unlockButton = (Button) findViewById(R.id.unlockButton);
 		unlockButton.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View v) {
+				// We don't want users repeatedly tapping the button
 				unlockButton.setEnabled(false);
-				unlockCode = getUnlockCode();
-				String text = "";
 
-				if (unlockCode != "") {
-					text = unlockCodeFound + "\n" + unlockCode;
-					// Since we found the unlockCode, we try to write it to
-					// the SD card
-					if (saveUnlockCodeToSD(unlockCode)) {
-						text += "\n\n" + unlockCodeSaved + "\n" + outputFile;
-					} else {
-						text += "\n\n" + unlockCodeNotSaved;
-					}
-				} else {
-					text = unlockCodeNotFound;
-				}
+				// Tell the user to chill while we do our thing
+				pd = new ProgressDialog(SGS4GCarrierUnlockerActivity.this);
+				pd.setMessage(pleaseWait);
+				pd.setCancelable(false);
+				pd.show();
 
-				setNewTextInTextView(text);
+				// We start the unlocking process in another thread so the UI
+				// can update while it waits for the result
+				Thread thread = new Thread(SGS4GCarrierUnlockerActivity.this);
+				thread.start();
 			}
 		});
 	}
+
+	// Process Dialog
+	// run and handler modified from
+	// http://www.helloandroid.com/tutorials/using-threads-and-progressdialog
+	public void run() {
+		unlockCode = getUnlockCode();
+
+		if (unlockCode != "") {
+			resultText = unlockCodeFound + "\n" + unlockCode;
+			// Try to write the unlock code to the SD card
+			if (saveUnlockCodeToSD(unlockCode)) {
+				resultText += "\n\n" + unlockCodeSaved + "\n" + outputFile;
+			} else {
+				resultText += "\n\n" + unlockCodeNotSaved;
+			}
+		} else {
+			resultText = unlockCodeNotFound;
+		}
+
+		// Tell the thread handler that we're done
+		handler.sendEmptyMessage(0);
+	}
+
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			// We don't need the dialog anymore
+			pd.dismiss();
+			tv.setText(resultText);
+		}
+	};
 
 	public String getUnlockCode() {
 		String unlockCode = "";
@@ -90,12 +128,13 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 						.compile("ff0[01]00000000([0-9a-f]{16})ff");
 				Matcher regexMatcher = regex.matcher(hexString);
 				while (regexMatcher.find()) {
-					// We're going to use regexMatcher's capturing group 1
-					// from the regex pattern above.
+					// If the regex successfully matched, the code will be in
+					// capturing group 1
 					unlockCode = extractUnlockCode(regexMatcher.group(1));
-					if (unlockCode != "")
+					if (unlockCode != "") {
 						// We found a good code! end the loop
 						break;
+					}
 				}
 			} catch (PatternSyntaxException e) {
 				// Syntax error in the regular expression
@@ -112,7 +151,7 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		return unlockCode;
 	}
 
-	public boolean saveUnlockCodeToSD(String unlockCode) {
+	private boolean saveUnlockCodeToSD(String unlockCode) {
 		// From android "Checking media availability" example:
 		// http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
 
@@ -151,7 +190,7 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		return returnStatus;
 	}
 
-	public static String extractUnlockCode(String hexString) {
+	private String extractUnlockCode(String hexString) {
 		String hexByte = "";
 		String result = "";
 		for (int i = 0; i < hexString.length(); i++) {
@@ -179,7 +218,7 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		return result;
 	}
 
-	public static String bytesToHexString(byte[] bytes) {
+	private String bytesToHexString(byte[] bytes) {
 		StringBuilder sb = new StringBuilder(bytes.length * 2);
 		Formatter formatter = new Formatter(sb);
 
@@ -193,7 +232,7 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 
 	// Method from the Example Depot
 	// http://www.exampledepot.com/egs/java.io/file2bytearray.html
-	public static byte[] getBytesFromFile(File file) throws IOException {
+	private byte[] getBytesFromFile(File file) throws IOException {
 		InputStream is = new FileInputStream(file);
 
 		// Get the size of the file
@@ -201,7 +240,8 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 
 		// Check to ensure that file is not larger than Integer.MAX_VALUE.
 		if (length > Integer.MAX_VALUE) {
-			// File is too large
+			// File is too large, return empty byte array
+			return new byte[0];
 		}
 
 		// Create the byte array to hold the data
@@ -226,9 +266,4 @@ public class SGS4GCarrierUnlockerActivity extends Activity {
 		return bytes;
 	}
 
-	public void setNewTextInTextView(String text) {
-		TextView tv = new TextView(this);
-		tv = (TextView) findViewById(R.id.resultText);
-		tv.setText(text);
-	}
 }

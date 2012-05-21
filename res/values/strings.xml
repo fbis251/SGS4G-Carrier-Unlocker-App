@@ -2,12 +2,14 @@
 <resources>
 
     <string name="instructions">Instructions:\n
-        1) Press the button\n
-        2) Grant SuperUser permissions to the app\n
-        3) Wait a few seconds\n
-        4) Get your unlock code\n</string>
-    <string name="app_name">SGS4G Carrier Unlocker</string>
+        1) Make sure you have an sd card inserted\n
+        2) Press the button\n
+        3) Grant SuperUser permissions to the app\n
+        4) Wait a few seconds\n
+        5) Get your unlock code\n</string>
+    <string name="app_name">SGS4G Unlocker</string>
     <string name="button">Get Unlock Code</string>
+    <string name="pleaseWait">Working… Please wait.</string>
     <string name="outputFile">/sdcard/unlockcode.txt</string>
     <string name="nvDataFile">/efs/root/afs/settings/nv_data.bin</string>
     <string name="nvDataTempFile">/sdcard/nv_data.bin</string>
