@@ -1,17 +1,16 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
-import com.fernandobarillas.SGS4GCarrierUnlocker.UnlockCode;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
+public class UnlockCodeActivity extends Activity implements Runnable {
 	String pleaseWait;
 	String outputFile;
 	String nvDataFile;
@@ -26,11 +25,11 @@ public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
 	static TextView textView;
 	static ProgressDialog processDialog;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_unlock_code);
+		Log.i("myid", "Activity: UnlockCodeActivity");
 
 		// Initialize variables
 		pleaseWait = getString(R.string.pleaseWait);
@@ -47,7 +46,8 @@ public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
 
 		// Add a complete path to external storage
 		outputFile = UnlockCode.storagePathRoot + outputFile;
-		unlockCodeObject = new UnlockCode(nvDataFile, outputFile, nvDataTempFile);
+		unlockCodeObject = new UnlockCode(nvDataFile, outputFile,
+				nvDataTempFile);
 
 		// This is our main button! Basically only here so the user will need to
 		// do something before the superuser request
@@ -58,15 +58,14 @@ public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
 				unlockButton.setEnabled(false);
 
 				// Tell the user to chill while we do our thing
-				processDialog = new ProgressDialog(
-						SGS4GCarrierUnlockerActivity.this);
+				processDialog = new ProgressDialog(UnlockCodeActivity.this);
 				processDialog.setMessage(pleaseWait);
 				processDialog.setCancelable(false);
 				processDialog.show();
 
 				// We start the unlocking process in another thread so the UI
 				// can update while it waits for the result
-				Thread thread = new Thread(SGS4GCarrierUnlockerActivity.this);
+				Thread thread = new Thread(UnlockCodeActivity.this);
 				thread.start();
 			}
 		});
@@ -102,4 +101,5 @@ public class SGS4GCarrierUnlockerActivity extends Activity implements Runnable {
 			textView.setText(resultText);
 		}
 	};
+
 }

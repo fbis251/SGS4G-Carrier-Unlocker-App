@@ -6,9 +6,11 @@
         2) Press the button\n
         3) Grant SuperUser permissions to the app\n
         4) Wait a few seconds\n
-        5) Get your unlock code\n
-    </string>
-    <string name="app_name">SGS4G Unlocker</string>
+        5) Get your unlock code\n</string>
+    <string name="textAbout">This application was created by\n
+        Fernando Barillas\n
+        &#169;2012</string>
+    <string name="appName">SGS4G Unlocker</string>
     <string name="button">Get Unlock Code</string>
     <string name="pleaseWait">Working… Please wait.</string>
     <string name="nvDataFile">/efs/root/afs/settings/nv_data.bin</string>
@@ -19,5 +21,14 @@
     <string name="unlockCodeSaved">Your unlock code has been saved to:</string>
     <string name="unlockCodeNotSaved">Your unlock code could not be saved to SD card</string>
     <string name="unlockCodeNotFound">Your unlock code could not be found</string>
+    <string name="menuSettings">Settings</string>
+    <string name="menuExit">Exit</string>
+    <string name="menuAbout">About</string>
+    <string name="tabUnlockCode">Unlock Code</string>
+    <string name="tabEfsTools">EFS Tools</string>
+    <string name="titleActivityUnlockCode">Unlock Code</string>
+    <string name="titleActivityEfsTools">EFS Tools</string>
+    <string name="titleActivitySettings">Settings</string>
+    <string name="titleActivityAbout">About</string>
 
 </resources>

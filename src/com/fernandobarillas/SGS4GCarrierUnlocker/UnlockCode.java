@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import com.xdatv.xdasdk.Shell;
+
 public class UnlockCode {
 	static String storagePathRoot = Environment.getExternalStorageDirectory()
 			.getPath();
@@ -21,7 +23,7 @@ public class UnlockCode {
 
 	public UnlockCode() {
 		// We're going to need to hard-code the variables if they're not passed
-		// in, so we'll use /sdcard/unlockcode.txt as a default
+		// in, so we'll use the default path for the SGS4G'S nv_data.bin
 		nvDataFile = "/efs/root/afs/settings/nv_data.bin";
 	}
 
@@ -30,20 +32,21 @@ public class UnlockCode {
 	}
 
 	public UnlockCode(String nvDataFile, String outputFile) {
-		// We have to make sure that the file WILL get saved to the sdcard
+		this(nvDataFile);
+		// Make sure that the file will get saved to the sdcard
 		if (!outputFile.startsWith(storagePathRoot)) {
 			outputFile = storagePathRoot + outputFile;
 		}
 		UnlockCode.outputFile = outputFile;
 	}
 
-	public UnlockCode(String nvDataFile, String outputFile, String nvDataTempFile) {
-		// We have to make sure that the file WILL get saved to the sdcard
+	public UnlockCode(String nvDataFile, String outputFile,
+			String nvDataTempFile) {
+		this(nvDataFile, outputFile);
+		// Make sure that the file will get saved to the sdcard
 		if (!nvDataTempFile.startsWith(storagePathRoot)) {
 			nvDataTempFile = storagePathRoot + nvDataTempFile;
 		}
-		UnlockCode.nvDataFile = nvDataFile;
-		UnlockCode.nvDataFile = nvDataFile;
 		UnlockCode.nvDataTempFile = nvDataTempFile;
 	}
 

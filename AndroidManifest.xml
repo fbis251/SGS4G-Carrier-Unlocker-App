@@ -7,21 +7,50 @@
 
     <uses-sdk
         android:minSdkVersion="4"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="11" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/appName"
+        android:theme="@style/UnlockerTheme" >
         <activity
-            android:name=".SGS4GCarrierUnlockerActivity"
-            android:label="@string/app_name" >
+            android:name=".MainActivity"
+            android:label="@string/appName" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".UnlockCodeActivity"
+            android:label="@string/titleActivityUnlockCode" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fernandobarillas.SGS4GCarrierUnlocker.MainActivity" />
+        </activity>
+        <activity
+            android:name=".EfsToolsActivity"
+            android:label="@string/titleActivityEfsTools" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fernandobarillas.SGS4GCarrierUnlocker.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/titleActivitySettings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fernandobarillas.SGS4GCarrierUnlocker.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/titleActivityAbout" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fernandobarillas.SGS4GCarrierUnlocker.MainActivity" />
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.fernandobarillas.SGS4GCarrierUnlocker;
+package com.xdatv.xdasdk;
 
 /*
  * Copyright (c) 2011 Adam Outler
