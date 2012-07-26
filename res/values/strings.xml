@@ -30,5 +30,12 @@
     <string name="titleActivityEfsTools">EFS Tools</string>
     <string name="titleActivitySettings">Settings</string>
     <string name="titleActivityAbout">About</string>
+    <string name="preference_category_output_title">Text File Output</string>
+    <string name="preference_output_file_title">File Output</string>
+    <string name="preference_output_file_summary">Output unlock code to SD Card</string>
+    <string name="preference_output_filename_default">UnlockCode.txt</string>
+    <string name="preference_output_filename_dialog_title">Please enter the file name:</string>
+    <string name="preference_output_filename_summary">File will be saved under\n/sdcard/&lt;filename&gt;</string>
+    <string name="preference_output_filename_title">File Name</string>
 
 </resources>

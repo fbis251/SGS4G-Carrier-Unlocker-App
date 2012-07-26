@@ -1,15 +1,17 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.util.Log;
-import android.app.Activity;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends PreferenceActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
 		Log.i("myid", "Activity: SettingsActivity");
+		super.onCreate(savedInstanceState);
+		
+		Log.i("myid", "Loading preferences from XML");
+		addPreferencesFromResource(R.xml.preferences);
 	}
 }
