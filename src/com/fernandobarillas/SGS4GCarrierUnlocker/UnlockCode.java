@@ -1,6 +1,7 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,12 +23,14 @@ public class UnlockCode {
 	static String nvDataTempFile = storagePathRoot + "/nv_data.bin";
 
 	public UnlockCode() {
+		Log.i("myid", "UnlockCode instantiated");
 		// We're going to need to hard-code the variables if they're not passed
 		// in, so we'll use the default path for the SGS4G'S nv_data.bin
 		nvDataFile = "/efs/root/afs/settings/nv_data.bin";
 	}
 
 	public UnlockCode(String nvDataFile) {
+		this();
 		UnlockCode.nvDataFile = nvDataFile;
 	}
 
@@ -51,6 +54,7 @@ public class UnlockCode {
 	}
 
 	public String getUnlockCode() {
+		Log.i("myid", "UnlockCode: Getting Unlock Code");
 		String unlockCode = "";
 		byte[] byteArray;
 		Shell shell = new Shell();
@@ -58,6 +62,7 @@ public class UnlockCode {
 		try {
 			// Copy over the nv_data.bin file from the default location to a
 			// temporary location
+			Log.i("myid", "UnlockCode: Getting SU permissions");
 			shell.sendShellCommand(new String[] { "su", "-c",
 					"cat " + nvDataFile + " > " + nvDataTempFile });
 
@@ -66,6 +71,7 @@ public class UnlockCode {
 			String hexString = bytesToHexString(byteArray);
 
 			try {
+				Log.i("myid", "UnlockCode: Regex search");
 				Pattern regex = Pattern
 						.compile("ff0[01]00000000([0-9a-f]{16})ff");
 				Matcher regexMatcher = regex.matcher(hexString);
@@ -75,11 +81,13 @@ public class UnlockCode {
 					unlockCode = extractUnlockCode(regexMatcher.group(1));
 					if (unlockCode != "") {
 						// We found a good code! end the loop
+						Log.i("myid", "UnlockCode: Code successfully found!");
 						break;
 					}
 				}
 			} catch (PatternSyntaxException e) {
 				// Syntax error in the regular expression
+				Log.e("myid", "UnlockCode: Regex error");
 				e.printStackTrace();
 			}
 
@@ -88,12 +96,14 @@ public class UnlockCode {
 					"rm " + nvDataTempFile });
 
 		} catch (IOException e) {
+			Log.e("myid", "UnlockCode: Error opening temp file, I probably don't have SU permission");
 			e.printStackTrace();
 		}
 		return unlockCode;
 	}
 
 	private String extractUnlockCode(String hexString) {
+		Log.i("myid", "UnlockCode: Extracting Unlock Code");
 		String hexByte = "";
 		String result = "";
 		for (int i = 0; i < hexString.length(); i++) {
@@ -123,6 +133,7 @@ public class UnlockCode {
 	}
 
 	public boolean saveUnlockCodeToSDCard(String unlockCode) {
+		Log.i("myid", "UnlockCode: Saving unlock code to: " + outputFile);
 		// From android "Checking media availability" example:
 		// http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
 
@@ -140,8 +151,7 @@ public class UnlockCode {
 			mExternalStorageWriteable = false;
 		} else {
 			// Something else is wrong. It may be one of many other states, but
-			// all we need
-			// to know is we can neither read nor write
+			// all we need to know is we can neither read nor write
 			mExternalStorageAvailable = mExternalStorageWriteable = false;
 		}
 		try {
@@ -154,6 +164,7 @@ public class UnlockCode {
 				returnStatus = false;
 			}
 		} catch (IOException e) {
+			Log.e("myid", "UnlockCode: Save to sd card failed!");
 			e.printStackTrace();
 			returnStatus = false;
 		}

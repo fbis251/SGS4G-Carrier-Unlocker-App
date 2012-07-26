@@ -17,9 +17,9 @@ public class MainActivity extends TabActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i("myid", "Activity: MainActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		Log.i("myid", "Activity: MainActivity");
 
 		// Initialize variables
 		tabUnlockCode = getString(R.string.tabUnlockCode);
