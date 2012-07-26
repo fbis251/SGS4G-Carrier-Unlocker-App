@@ -1,5 +1,5 @@
 <resources>
 
-    <style name="UnlockerTheme" parent="@android:style/Theme.Holo.NoActionBar" />
+    <style name="UnlockerTheme" parent="@android:style/Theme.Holo" />
 
 </resources>

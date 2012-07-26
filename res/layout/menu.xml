@@ -3,6 +3,7 @@
 
     <item
         android:id="@+id/settings"
+        android:showAsAction="ifRoom"
         android:title="@string/menuSettings"/>
 
     <item
