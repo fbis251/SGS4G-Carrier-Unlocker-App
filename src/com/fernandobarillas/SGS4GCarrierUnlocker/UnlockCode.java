@@ -16,41 +16,41 @@ import java.util.regex.PatternSyntaxException;
 import com.xdatv.xdasdk.Shell;
 
 public class UnlockCode {
-	static String storagePathRoot = Environment.getExternalStorageDirectory()
+	static String STORAGE_PATH_ROOT = Environment.getExternalStorageDirectory()
 			.getPath();
-	static String nvDataFile;
-	static String outputFile = storagePathRoot + "/unlockcode.txt";
-	static String nvDataTempFile = storagePathRoot + "/nv_data.bin";
+	static String NV_DATA_FILE;
+	static String OUTPUT_FILE = STORAGE_PATH_ROOT + "/unlockcode.txt";
+	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
 
 	public UnlockCode() {
 		Log.i("myid", "UnlockCode instantiated");
 		// We're going to need to hard-code the variables if they're not passed
 		// in, so we'll use the default path for the SGS4G'S nv_data.bin
-		nvDataFile = "/efs/root/afs/settings/nv_data.bin";
+		NV_DATA_FILE = "/efs/root/afs/settings/nv_data.bin";
 	}
 
 	public UnlockCode(String nvDataFile) {
 		this();
-		UnlockCode.nvDataFile = nvDataFile;
+		UnlockCode.NV_DATA_FILE = nvDataFile;
 	}
 
 	public UnlockCode(String nvDataFile, String outputFile) {
 		this(nvDataFile);
 		// Make sure that the file will get saved to the sdcard
-		if (!outputFile.startsWith(storagePathRoot)) {
-			outputFile = storagePathRoot + outputFile;
+		if (!outputFile.startsWith(STORAGE_PATH_ROOT)) {
+			outputFile = STORAGE_PATH_ROOT + outputFile;
 		}
-		UnlockCode.outputFile = outputFile;
+		UnlockCode.OUTPUT_FILE = outputFile;
 	}
 
 	public UnlockCode(String nvDataFile, String outputFile,
 			String nvDataTempFile) {
 		this(nvDataFile, outputFile);
 		// Make sure that the file will get saved to the sdcard
-		if (!nvDataTempFile.startsWith(storagePathRoot)) {
-			nvDataTempFile = storagePathRoot + nvDataTempFile;
+		if (!nvDataTempFile.startsWith(STORAGE_PATH_ROOT)) {
+			nvDataTempFile = STORAGE_PATH_ROOT + nvDataTempFile;
 		}
-		UnlockCode.nvDataTempFile = nvDataTempFile;
+		UnlockCode.NV_DATA_TEMP_FILE = nvDataTempFile;
 	}
 
 	public String getUnlockCode() {
@@ -64,10 +64,10 @@ public class UnlockCode {
 			// temporary location
 			Log.i("myid", "UnlockCode: Getting SU permissions");
 			shell.sendShellCommand(new String[] { "su", "-c",
-					"cat " + nvDataFile + " > " + nvDataTempFile });
+					"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
 
 			// Now we can convert it to a hex string
-			byteArray = getBytesFromFile(new File(nvDataTempFile));
+			byteArray = getBytesFromFile(new File(NV_DATA_TEMP_FILE));
 			String hexString = bytesToHexString(byteArray);
 
 			try {
@@ -93,7 +93,7 @@ public class UnlockCode {
 
 			// Now we delete the temporary file
 			shell.sendShellCommand(new String[] { "su", "-c",
-					"rm " + nvDataTempFile });
+					"rm " + NV_DATA_TEMP_FILE });
 
 		} catch (IOException e) {
 			Log.e("myid", "UnlockCode: Error opening temp file, I probably don't have SU permission");
@@ -133,7 +133,7 @@ public class UnlockCode {
 	}
 
 	public boolean saveUnlockCodeToSDCard(String unlockCode) {
-		Log.i("myid", "UnlockCode: Saving unlock code to: " + outputFile);
+		Log.i("myid", "UnlockCode: Saving unlock code to: " + OUTPUT_FILE);
 		// From android "Checking media availability" example:
 		// http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
 
@@ -156,7 +156,7 @@ public class UnlockCode {
 		}
 		try {
 			if (mExternalStorageAvailable && mExternalStorageWriteable) {
-				PrintWriter out = new PrintWriter(outputFile);
+				PrintWriter out = new PrintWriter(OUTPUT_FILE);
 				out.println(unlockCode);
 				out.close();
 				returnStatus = true;

@@ -4,15 +4,15 @@
     <item
         android:id="@+id/settings"
         android:showAsAction="ifRoom"
-        android:title="@string/menuSettings"/>
+        android:title="@string/menu_settings"/>
 
     <item
         android:id="@+id/about"
         android:icon="@drawable/icon"
-        android:title="@string/menuAbout"/>
+        android:title="@string/menu_about"/>
 
     <item
         android:id="@+id/exit"
-        android:title="@string/menuExit"/>
+        android:title="@string/menu_exit"/>
 
 </menu>

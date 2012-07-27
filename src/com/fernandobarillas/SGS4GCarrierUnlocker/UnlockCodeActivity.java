@@ -32,26 +32,26 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 		setContentView(R.layout.activity_unlock_code);
 
 		// Initialize variables
-		pleaseWait = getString(R.string.pleaseWait);
-		outputFile = getString(R.string.outputFile);
-		nvDataFile = getString(R.string.nvDataFile);
-		nvDataTempFile = getString(R.string.nvDataTempFile);
-		unlockCodeFound = getString(R.string.unlockCodeFound);
-		unlockCodeNotFound = getString(R.string.unlockCodeNotFound);
-		unlockCodeSaved = getString(R.string.unlockCodeSaved);
-		unlockCodeNotSaved = getString(R.string.unlockCodeNotSaved);
+		pleaseWait = getString(R.string.please_wait);
+		outputFile = getString(R.string.output_file);
+		nvDataFile = getString(R.string.nv_data_file);
+		nvDataTempFile = getString(R.string.nv_data_temp_file);
+		unlockCodeFound = getString(R.string.unlock_code_found);
+		unlockCodeNotFound = getString(R.string.unlock_code_not_found);
+		unlockCodeSaved = getString(R.string.unlock_code_saved);
+		unlockCodeNotSaved = getString(R.string.unlock_code_not_saved);
 
 		// Set the resultText view for use by other methods
-		textView = (TextView) this.findViewById(R.id.resultText);
+		textView = (TextView) this.findViewById(R.id.unlock_code_result_view);
 
 		// Add a complete path to external storage
-		outputFile = UnlockCode.storagePathRoot + outputFile;
+		outputFile = UnlockCode.STORAGE_PATH_ROOT + outputFile;
 		unlockCodeObject = new UnlockCode(nvDataFile, outputFile,
 				nvDataTempFile);
 
 		// This is our main button! Basically only here so the user will need to
 		// do something before the superuser request
-		final Button unlockButton = (Button) findViewById(R.id.unlockButton);
+		final Button unlockButton = (Button) findViewById(R.id.unlock_button);
 		unlockButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// We don't want users repeatedly tapping the button

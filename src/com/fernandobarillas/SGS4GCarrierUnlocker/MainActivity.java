@@ -22,8 +22,8 @@ public class MainActivity extends TabActivity {
 		setContentView(R.layout.main);
 
 		// Initialize variables
-		tabUnlockCode = getString(R.string.tabUnlockCode);
-		tabEfsTools = getString(R.string.tabEfsTools);
+		tabUnlockCode = getString(R.string.tab_unlock_code);
+		tabEfsTools = getString(R.string.tab_efs_tools);
 
 		TabHost tabHost = getTabHost();
 
