@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
-        android:text="@string/instructions" />
+        android:text="@string/unlock_code_instructions" />
 
     <Button
         android:id="@+id/unlock_button"

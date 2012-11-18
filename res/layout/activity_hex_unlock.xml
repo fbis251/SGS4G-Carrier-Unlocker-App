@@ -9,27 +9,27 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
-        android:text="@string/efs_tools_instructions" />
+        android:text="@string/hex_unlock_instructions" />
 
     <Button
-        android:id="@+id/efs_backup_button"
+        android:id="@+id/hex_unlock_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
-        android:text="@string/efs_backup_button" />
+        android:text="@string/hex_unlock_button" />
 
     <Button
-        android:id="@+id/efs_restore_button"
+        android:id="@+id/hex_lock_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/efs_backup_button"
+        android:layout_below="@+id/hex_unlock_button"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
         android:layout_marginTop="20dp"
-        android:text="@string/efs_restore_button" />
+        android:text="@string/hex_lock_button" />
 
 </RelativeLayout>
