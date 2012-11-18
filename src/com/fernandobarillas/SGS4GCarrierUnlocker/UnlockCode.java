@@ -4,11 +4,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -23,7 +20,7 @@ public class UnlockCode {
 	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
 
 	public UnlockCode() {
-		Log.i("myid", "UnlockCode instantiated");
+		Log.i("UnlockCode", "UnlockCode instantiated");
 		// We're going to need to hard-code the variables if they're not passed
 		// in, so we'll use the default path for the SGS4G'S nv_data.bin
 		NV_DATA_FILE = "/efs/root/afs/settings/nv_data.bin";
@@ -54,7 +51,7 @@ public class UnlockCode {
 	}
 
 	public String getUnlockCode() {
-		Log.i("myid", "UnlockCode: Getting Unlock Code");
+		Log.i("UnlockCode", "Getting Unlock Code");
 		String unlockCode = "";
 		byte[] byteArray;
 		Shell shell = new Shell();
@@ -62,18 +59,18 @@ public class UnlockCode {
 		try {
 			// Copy over the nv_data.bin file from the default location to a
 			// temporary location
-			Log.i("myid", "UnlockCode: Getting SU permissions");
+			Log.i("UnlockCode", "Getting SU permissions");
 			shell.sendShellCommand(new String[] { "su", "-c",
 					"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
 
 			// Now we can convert it to a hex string
-			byteArray = getBytesFromFile(new File(NV_DATA_TEMP_FILE));
-			String hexString = bytesToHexString(byteArray);
+			byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
+			String hexString = HexUtils.bytesToHexString(byteArray);
 
 			try {
-				Log.i("myid", "UnlockCode: Regex search");
+				Log.i("UnlockCode", "Regex search");
 				Pattern regex = Pattern
-						.compile("ff0[01]00000000([0-9a-f]{16})ff");
+						.compile("FF0[01]00000000([0-9A-F]{16})FF");
 				Matcher regexMatcher = regex.matcher(hexString);
 				while (regexMatcher.find()) {
 					// If the regex successfully matched, the code will be in
@@ -81,13 +78,13 @@ public class UnlockCode {
 					unlockCode = extractUnlockCode(regexMatcher.group(1));
 					if (unlockCode != "") {
 						// We found a good code! end the loop
-						Log.i("myid", "UnlockCode: Code successfully found!");
+						Log.i("UnlockCode", "Code successfully found!");
 						break;
 					}
 				}
 			} catch (PatternSyntaxException e) {
 				// Syntax error in the regular expression
-				Log.e("myid", "UnlockCode: Regex error");
+				Log.e("UnlockCode", "Regex error");
 				e.printStackTrace();
 			}
 
@@ -96,14 +93,15 @@ public class UnlockCode {
 					"rm " + NV_DATA_TEMP_FILE });
 
 		} catch (IOException e) {
-			Log.e("myid", "UnlockCode: Error opening temp file, I probably don't have SU permission");
+			Log.e("UnlockCode",
+					"Error opening temp file, I probably don't have SU permission");
 			e.printStackTrace();
 		}
 		return unlockCode;
 	}
 
 	private String extractUnlockCode(String hexString) {
-		Log.i("myid", "UnlockCode: Extracting Unlock Code");
+		Log.i("UnlockCode", "Extracting Unlock Code");
 		String hexByte = "";
 		String result = "";
 		for (int i = 0; i < hexString.length(); i++) {
@@ -133,7 +131,7 @@ public class UnlockCode {
 	}
 
 	public boolean saveUnlockCodeToSDCard(String unlockCode) {
-		Log.i("myid", "UnlockCode: Saving unlock code to: " + OUTPUT_FILE);
+		Log.i("UnlockCode", "Saving unlock code to: " + OUTPUT_FILE);
 		// From android "Checking media availability" example:
 		// http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
 
@@ -164,65 +162,11 @@ public class UnlockCode {
 				returnStatus = false;
 			}
 		} catch (IOException e) {
-			Log.e("myid", "UnlockCode: Save to sd card failed!");
+			Log.e("UnlockCode", "Save to sd card failed!");
 			e.printStackTrace();
 			returnStatus = false;
 		}
 
 		return returnStatus;
-	}
-
-	private String bytesToHexString(byte[] bytes) {
-		StringBuilder stringBuilder = new StringBuilder(bytes.length * 2);
-		Formatter formatter = new Formatter(stringBuilder);
-
-		for (byte currentByte : bytes) {
-			// Output each byte as a hex string character
-			formatter.format("%02x", currentByte);
-		}
-
-		// Close the formatter
-		formatter.close();
-		return stringBuilder.toString();
-	}
-
-	// Method from the Example Depot
-	// http://www.exampledepot.com/egs/java.io/file2bytearray.html
-	private byte[] getBytesFromFile(File file) throws IOException {
-		InputStream inputStream = new FileInputStream(file);
-
-		// Get the size of the file
-		long length = file.length();
-
-		// Check to ensure that file is not larger than Integer.MAX_VALUE.
-		if (length > Integer.MAX_VALUE) {
-			// File is too large, return empty byte array
-			// Close the input stream and return bytes
-			inputStream.close();
-			return new byte[0];
-		}
-
-		// Create the byte array to hold the data
-		byte[] bytes = new byte[(int) length];
-
-		// Read in the bytes
-		int offset = 0;
-		int numRead = 0;
-		while (offset < bytes.length
-				&& (numRead = inputStream.read(bytes, offset, bytes.length
-						- offset)) >= 0) {
-			offset += numRead;
-		}
-
-		// Close the input stream since we no longer need it
-		inputStream.close();
-
-		// Ensure all the bytes have been read in
-		if (offset < bytes.length) {
-			throw new IOException("Could not completely read file "
-					+ file.getName());
-		}
-
-		return bytes;
 	}
 }

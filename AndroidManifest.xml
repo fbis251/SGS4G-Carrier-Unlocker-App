@@ -52,6 +52,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fernandobarillas.SGS4GCarrierUnlocker.MainActivity" />
         </activity>
+        <activity
+            android:name=".HexUnlockActivity"
+            android:label="@string/title_activity_hex_unlock" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
     </application>
 
 </manifest>

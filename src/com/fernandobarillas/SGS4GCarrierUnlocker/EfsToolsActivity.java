@@ -5,6 +5,7 @@ import android.util.Log;
 import android.app.Activity;
 
 public class EfsToolsActivity extends Activity {
+	EfsTools efsTools;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -12,17 +12,19 @@ import android.widget.TabHost.TabSpec;
 
 public class MainActivity extends TabActivity {
 	String tabUnlockCode;
+	String tabHexUnlock;
 	String tabEfsTools;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("myid", "Activity: MainActivity");
+		Log.i("MainActivity", "Activity: MainActivity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		// Initialize variables
 		tabUnlockCode = getString(R.string.tab_unlock_code);
+		tabHexUnlock = getString(R.string.tab_hex_unlock);
 		tabEfsTools = getString(R.string.tab_efs_tools);
 
 		TabHost tabHost = getTabHost();
@@ -34,6 +36,13 @@ public class MainActivity extends TabActivity {
 		Intent unlockCodeIntent = new Intent(this, UnlockCodeActivity.class);
 		tabUnlockCodeSpec.setContent(unlockCodeIntent);
 
+		// Hex Unlock tab
+		TabSpec hexUnlockSpec = tabHost.newTabSpec(tabHexUnlock);
+		hexUnlockSpec.setIndicator(tabHexUnlock,
+				getResources().getDrawable(R.drawable.magnifying_glass));
+		Intent hexUnlockIntent = new Intent(this, HexUnlockActivity.class);
+		hexUnlockSpec.setContent(hexUnlockIntent);
+
 		// EFS Tools tab
 		TabSpec efsToolsSpec = tabHost.newTabSpec(tabEfsTools);
 		efsToolsSpec.setIndicator(tabEfsTools,
@@ -42,6 +51,7 @@ public class MainActivity extends TabActivity {
 		efsToolsSpec.setContent(efsToolsIntent);
 
 		// Now we add all the tabs
+		tabHost.addTab(hexUnlockSpec);
 		tabHost.addTab(tabUnlockCodeSpec);
 		tabHost.addTab(efsToolsSpec);
 	}
@@ -78,7 +88,7 @@ public class MainActivity extends TabActivity {
 	public void terminate() {
 		super.onDestroy();
 		this.finish();
-		Log.i("myid", "Application successfully terminated!");
+		Log.i("MainActivity", "Application successfully terminated!");
 		System.exit(0);
 	}
 }
