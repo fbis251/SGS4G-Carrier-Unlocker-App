@@ -51,8 +51,8 @@ public class MainActivity extends TabActivity {
 		efsToolsSpec.setContent(efsToolsIntent);
 
 		// Now we add all the tabs
-		tabHost.addTab(hexUnlockSpec);
 		tabHost.addTab(tabUnlockCodeSpec);
+		tabHost.addTab(hexUnlockSpec);
 		tabHost.addTab(efsToolsSpec);
 	}
 

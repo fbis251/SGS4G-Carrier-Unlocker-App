@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import com.xdatv.xdasdk.Shell;
 
@@ -58,8 +57,7 @@ public class HexUnlock {
 				Log.i("HexUnlock",
 						"Hex strings don't match, doing replacement.");
 
-				byte[] outputBytes = HexUtils.hexStringToBytes(newHexString);
-				if (writeFile(outputBytes)) {
+				if (writeNvFile(HexUtils.hexStringToBytes(newHexString))) {
 					Log.i("HexUnlock", "Replacing nv_data.bin");
 					returnStatus = true;
 				} else {
@@ -74,7 +72,7 @@ public class HexUnlock {
 		return returnStatus;
 	}
 
-	private boolean writeFile(byte[] byteArray) {
+	private boolean writeNvFile(byte[] byteArray) {
 		try {
 			File sdCard = Environment.getExternalStorageDirectory();
 			File dir = new File(sdCard.getAbsolutePath() + "/");
@@ -93,23 +91,6 @@ public class HexUnlock {
 		return true;
 	}
 
-	private void cleanNvTempFile() {
-		// Now we delete the temporary file
-		Log.i("HexUnlock", "Deleting temp file");
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"rm " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5 });
-	}
-
-	private void updateNvTempFile() {
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
-	}
-
-	private void updateNvFile() {
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE });
-	}
-
 	private String getHexString() {
 		// Copy over the nv_data.bin file from the default location to a
 		// temporary location
@@ -120,14 +101,8 @@ public class HexUnlock {
 				NV_DATA_TEMP_FILE)));
 	}
 
-	private void updateHexString() {
-		Log.i("HexUnlock", "Updating hex string");
-		HEX_STRING = getHexString();
-		LOCK_STATUS = checkLockStatus();
-	}
-
 	/* Returns true if unlocked, false if locked */
-	public String checkLockStatus() {
+	public String getLockStatus() {
 		String returnString = "";
 		Pattern regexLocked = Pattern.compile("FF0100000000([0-9A-F]{16})FF");
 		Matcher regexMatcherLocked = regexLocked.matcher(HEX_STRING);
@@ -151,6 +126,30 @@ public class HexUnlock {
 
 		Log.i("HexUnlock", "Lock Status: " + returnString);
 		return returnString;
+	}
+
+	private void updateHexString() {
+		Log.i("HexUnlock", "Updating hex string");
+		HEX_STRING = getHexString();
+		LOCK_STATUS = getLockStatus();
+	}
+
+	private void cleanNvTempFile() {
+		Log.i("HexUnlock", "Deleting temp file");
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"rm " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5 });
+	}
+
+	private void updateNvTempFile() {
+		Log.i("HexUnlock", "Updating nv_data temp file");
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
+	}
+
+	private void updateNvFile() {
+		Log.i("HexUnlock", "Updating nv_data /efs file");
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE });
 	}
 
 }

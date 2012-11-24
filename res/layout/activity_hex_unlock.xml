@@ -18,8 +18,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/text_view_hex_unlock_instructions"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/padding_large"
-        android:layout_marginTop="@dimen/padding_large"
+        android:layout_marginBottom="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_small"
         android:gravity="center_vertical|center_horizontal" />
 
     <Button

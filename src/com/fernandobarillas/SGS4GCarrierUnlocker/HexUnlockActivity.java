@@ -2,13 +2,9 @@ package com.fernandobarillas.SGS4GCarrierUnlocker;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-//import android.view.Menu;
-//import android.view.MenuItem;
-//import android.support.v4.app.NavUtils;
 import android.widget.TextView;
 
 public class HexUnlockActivity extends Activity {
@@ -20,7 +16,7 @@ public class HexUnlockActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hex_unlock);
 		final HexUnlock hexUnlock = new HexUnlock();
-		String lockStatus = hexUnlock.checkLockStatus();
+		String lockStatus = hexUnlock.getLockStatus();
 
 		textView = (TextView) this.findViewById(R.id.hex_unlock_result_view);
 		textView.setText(lockStatus);
@@ -39,7 +35,7 @@ public class HexUnlockActivity extends Activity {
 				// We don't want users repeatedly tapping the button
 				hexUnlockButton.setEnabled(false);
 				hexUnlock.doHexEdit("unlocked");
-				textView.setText(hexUnlock.checkLockStatus());
+				textView.setText(hexUnlock.getLockStatus());
 				hexLockButton.setEnabled(true);
 			}
 		});
@@ -49,7 +45,7 @@ public class HexUnlockActivity extends Activity {
 				// We don't want users repeatedly tapping the button
 				hexLockButton.setEnabled(false);
 				hexUnlock.doHexEdit("locked");
-				textView.setText(hexUnlock.checkLockStatus());
+				textView.setText(hexUnlock.getLockStatus());
 				hexUnlockButton.setEnabled(true);
 			}
 		});
