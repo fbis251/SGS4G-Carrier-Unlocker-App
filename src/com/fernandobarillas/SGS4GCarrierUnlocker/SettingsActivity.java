@@ -8,10 +8,10 @@ public class SettingsActivity extends PreferenceActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("myid", "Activity: SettingsActivity");
+		Log.i("SettingsActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
 		
-		Log.i("myid", "Loading preferences from XML");
+		Log.i("SettingsActivity", "Loading preferences from XML");
 		addPreferencesFromResource(R.xml.preferences);
 	}
 }

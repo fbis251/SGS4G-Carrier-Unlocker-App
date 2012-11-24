@@ -9,7 +9,7 @@ public class EfsToolsActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("myid", "Activity: EfsToolsActivity");
+		Log.i("EfsToolsActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_efs_tools);
 	}

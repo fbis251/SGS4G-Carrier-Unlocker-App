@@ -8,7 +8,7 @@ public class AboutActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("myid", "Activity: AboutActivity");
+		Log.i("AboutActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 	}
