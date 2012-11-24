@@ -68,8 +68,7 @@ public class UnlockCode {
 
 		try {
 			Log.i("UnlockCode", "Regex search");
-			Pattern regex = Pattern
-					.compile("FF0[01]00000000([0-9A-F]{16})FF");
+			Pattern regex = Pattern.compile("FF0[01]00000000([0-9A-F]{16})FF");
 			Matcher regexMatcher = regex.matcher(hexString);
 			while (regexMatcher.find()) {
 				// If the regex successfully matched, the code will be in
