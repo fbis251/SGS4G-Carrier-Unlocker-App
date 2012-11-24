@@ -18,127 +18,74 @@ public class HexUnlock {
 	static String NV_DATA_FILE = "/efs/root/afs/settings/nv_data.bin";
 	static String NV_DATA_FILE_MD5 = NV_DATA_FILE + ".md5";
 	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
-	static String NV_DATA_NEW_FILE = STORAGE_PATH_ROOT + "/nv_data_new.bin";
 	static String HEX_STRING;
+	static String LOCK_STATUS;
 	static Shell shell = new Shell();
 
 	public HexUnlock() {
-
+		updateHexString();
+		System.out.println("Lock status: " + LOCK_STATUS);
 	}
 
-	public static String doHexUnlock() {
-		Log.i("HexUnlock", "Getting Unlock Code");
-		String unlockCode = "";
-		byte[] byteArray;
+	public boolean doHexEdit(String state) {
+		updateHexString();
 
-		try {
-			// Copy over the nv_data.bin file from the default location to a
-			// temporary location
-			Log.i("HexUnlock", "Getting SU permissions");
-			shell.sendShellCommand(new String[] { "su", "-c",
-					"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
+		boolean returnStatus = false;
+		Pattern regex = Pattern.compile("(FF0[01]00000000[0-9A-F]{16}FF)");
+		Matcher regexMatcher = regex.matcher(HEX_STRING);
+		String newHexString = "";
+		while (regexMatcher.find()) {
+			Log.i("HexUnlock", "Found correct hex string for lock/unlock");
 
-			// Now we can convert it to a hex string
-			byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
-			String hexString = HexUtils.bytesToHexString(byteArray);
+			// We found a good code! Make sure this is the correct byte to flip
+			String unlockHexString = HEX_STRING.replaceAll(
+					"FF01(00000000[0-9A-F]{16}FF)", "FF00$1");
+			String lockHexString = HEX_STRING.replaceAll(
+					"FF00(00000000[0-9A-F]{16}FF)", "FF01$1");
 
-			try {
-				Log.i("HexUnlock", "Regex search");
-				Pattern regex = Pattern
-						.compile("FF0[01]00000000([0-9A-F]{16})FF");
-				Matcher regexMatcher = regex.matcher(hexString);
-				while (regexMatcher.find()) {
-					Log.i("HexUnlock", "Regex matched");
-
-					// We found a good code! We're sure this is the byte we want
-					// to switch
-					// hexString = regexMatcher.group(0);
-					try {
-						Log.i("HexUnlock", "Lock Status Before: "
-								+ checkLockStatus(hexString));
-						// Lock
-						// String newHexString = hexString.replaceAll(
-						// "FF00(00000000[0-9A-F]{16}FF)", "FF01$1");
-						// Unlock
-						String newHexString = hexString.replaceAll(
-								"FF01(00000000[0-9A-F]{16}FF)", "FF00$1");
-						if (newHexString.equals(hexString)) {
-							Log.i("HexUnlock", "The hex strings match");
-						} else {
-							Log.i("HexUnlock",
-									"The hex strings no longer match ");
-
-							char[] oldChar = hexString.toCharArray();
-							char[] newChar = newHexString.toCharArray();
-							for (int i = 0; i < oldChar.length; i++) {
-								if (oldChar[i] != newChar[i]) {
-									if (i < 10)
-										System.out.print("0");
-									System.out.print(i + ": ");
-									System.out.print(oldChar[i] + " ");
-									System.out.print(newChar[i] + " ");
-									System.out.print(" MISMATCH ");
-								}
-								System.out.println();
-								System.out.println();
-							}
-
-							byte[] outputBytes = HexUtils
-									.hexStringToBytes(newHexString);
-							// TODO: Write to file here
-							if (writeFile(outputBytes)) {
-
-								Log.i("HexUnlock", "Replacing nv_data.bin");
-								shell.sendShellCommand(new String[] {
-										"su",
-										"-c",
-										"cat " + NV_DATA_NEW_FILE + " > "
-												+ NV_DATA_FILE });
-							} else {
-								Log.e("HexUnlock",
-										"Could not output new nv_data.bin file!");
-							}
-
-						}
-						Log.i("HexUnlock", "Lock Status After: "
-								+ checkLockStatus(hexString));
-					} catch (Exception e) {
-
-					}
-
-					break;
-				}
-			} catch (PatternSyntaxException e) {
-				// Syntax error in the regular expression
-				Log.e("HexUnlock", "Regex error");
-				e.printStackTrace();
+			if (state == "unlocked") {
+				newHexString = unlockHexString;
+				Log.i("HexUnlock", "Performing hex unlock");
+			} else if (state == "locked") {
+				newHexString = lockHexString;
+				Log.i("HexUnlock", "Performing hex lock");
 			}
 
-			// Now we delete the temporary file
-			Log.i("HexUnlock", "Deleting temp file");
-			shell.sendShellCommand(new String[] { "su", "-c",
-					"rm " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5 });
+			if (newHexString.equals(HEX_STRING)) {
+				Log.i("HexUnlock",
+						"Hex Strings match, no replacement performed.");
+			} else {
+				Log.i("HexUnlock",
+						"Hex strings don't match, doing replacement.");
 
-		} catch (IOException e) {
-			Log.e("HexUnlock",
-					"Error opening temp file, I probably don't have SU permission");
-			e.printStackTrace();
+				byte[] outputBytes = HexUtils.hexStringToBytes(newHexString);
+				if (writeFile(outputBytes)) {
+					Log.i("HexUnlock", "Replacing nv_data.bin");
+					returnStatus = true;
+				} else {
+					Log.e("HexUnlock", "Could not output new nv_data.bin file!");
+				}
+			}
+
+			break;
 		}
-		return unlockCode;
+
+		updateHexString();
+		return returnStatus;
 	}
 
-	private static boolean writeFile(byte[] byteArray) {
+	private boolean writeFile(byte[] byteArray) {
 		try {
 			File sdCard = Environment.getExternalStorageDirectory();
 			File dir = new File(sdCard.getAbsolutePath() + "/");
 			dir.mkdirs();
-			File file = new File(NV_DATA_NEW_FILE);
+			File file = new File(NV_DATA_TEMP_FILE);
 
 			FileOutputStream f = new FileOutputStream(file);
 
 			f.write(byteArray);
 			f.close();
-
+			updateNvFile();
 		} catch (IOException e) {
 			return false;
 		}
@@ -146,29 +93,64 @@ public class HexUnlock {
 		return true;
 	}
 
-	/* Returns true if unlocked, false if locked */
-	public static String checkLockStatus(String hexString) throws IOException {
-		byte[] byteArray;
+	private void cleanNvTempFile() {
+		// Now we delete the temporary file
+		Log.i("HexUnlock", "Deleting temp file");
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"rm " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5 });
+	}
+
+	private void updateNvTempFile() {
 		shell.sendShellCommand(new String[] { "su", "-c",
 				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
-		byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
-		hexString = HexUtils.bytesToHexString(byteArray);
+	}
 
+	private void updateNvFile() {
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE });
+	}
+
+	private String getHexString() {
+		// Copy over the nv_data.bin file from the default location to a
+		// temporary location
+		Log.i("HexUnlock", "Getting hex string from nv_data.bin");
+		updateNvTempFile();
+
+		return HexUtils.bytesToHexString(HexUtils.getBytesFromFile(new File(
+				NV_DATA_TEMP_FILE)));
+	}
+
+	private void updateHexString() {
+		Log.i("HexUnlock", "Updating hex string");
+		HEX_STRING = getHexString();
+		LOCK_STATUS = checkLockStatus();
+	}
+
+	/* Returns true if unlocked, false if locked */
+	public String checkLockStatus() {
+		String returnString = "";
 		Pattern regexLocked = Pattern.compile("FF0100000000([0-9A-F]{16})FF");
-		Matcher regexMatcherLocked = regexLocked.matcher(hexString);
+		Matcher regexMatcherLocked = regexLocked.matcher(HEX_STRING);
+		while (regexMatcherLocked.find()) {
+			if (UnlockCode.extractUnlockCode(regexMatcherLocked.group(1)) != "") {
+				// We have a find if we can get an unlock code
+				returnString = "locked";
+			}
+		}
 
 		Pattern regexUnlocked = Pattern.compile("FF0000000000([0-9A-F]{16})FF");
-		Matcher regexMatcherUnlocked = regexUnlocked.matcher(hexString);
-
-		if (regexMatcherLocked.find()) {
-			return "locked";
+		Matcher regexMatcherUnlocked = regexUnlocked.matcher(HEX_STRING);
+		while (regexMatcherUnlocked.find()) {
+			if (UnlockCode.extractUnlockCode(regexMatcherUnlocked.group(1)) != "") {
+				// We have a find if we can get an unlock code
+				returnString = "unlocked";
+			}
 		}
 
-		if (regexMatcherUnlocked.find()) {
-			return "unlocked";
-		}
+		cleanNvTempFile();
 
-		return null;
+		Log.i("HexUnlock", "Lock Status: " + returnString);
+		return returnString;
 	}
 
 }
