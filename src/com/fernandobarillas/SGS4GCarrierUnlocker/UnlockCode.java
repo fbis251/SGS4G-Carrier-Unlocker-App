@@ -56,51 +56,44 @@ public class UnlockCode {
 		byte[] byteArray;
 		Shell shell = new Shell();
 
+		// Copy over the nv_data.bin file from the default location to a
+		// temporary location
+		Log.i("UnlockCode", "Getting SU permissions");
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
+
+		// Now we can convert it to a hex string
+		byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
+		String hexString = HexUtils.bytesToHexString(byteArray);
+
 		try {
-			// Copy over the nv_data.bin file from the default location to a
-			// temporary location
-			Log.i("UnlockCode", "Getting SU permissions");
-			shell.sendShellCommand(new String[] { "su", "-c",
-					"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
-
-			// Now we can convert it to a hex string
-			byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
-			String hexString = HexUtils.bytesToHexString(byteArray);
-
-			try {
-				Log.i("UnlockCode", "Regex search");
-				Pattern regex = Pattern
-						.compile("FF0[01]00000000([0-9A-F]{16})FF");
-				Matcher regexMatcher = regex.matcher(hexString);
-				while (regexMatcher.find()) {
-					// If the regex successfully matched, the code will be in
-					// capturing group 1
-					unlockCode = extractUnlockCode(regexMatcher.group(1));
-					if (unlockCode != "") {
-						// We found a good code! end the loop
-						Log.i("UnlockCode", "Code successfully found!");
-						break;
-					}
+			Log.i("UnlockCode", "Regex search");
+			Pattern regex = Pattern
+					.compile("FF0[01]00000000([0-9A-F]{16})FF");
+			Matcher regexMatcher = regex.matcher(hexString);
+			while (regexMatcher.find()) {
+				// If the regex successfully matched, the code will be in
+				// capturing group 1
+				unlockCode = extractUnlockCode(regexMatcher.group(1));
+				if (unlockCode != "") {
+					// We found a good code! end the loop
+					Log.i("UnlockCode", "Code successfully found!");
+					break;
 				}
-			} catch (PatternSyntaxException e) {
-				// Syntax error in the regular expression
-				Log.e("UnlockCode", "Regex error");
-				e.printStackTrace();
 			}
-
-			// Now we delete the temporary file
-			shell.sendShellCommand(new String[] { "su", "-c",
-					"rm " + NV_DATA_TEMP_FILE });
-
-		} catch (IOException e) {
-			Log.e("UnlockCode",
-					"Error opening temp file, I probably don't have SU permission");
+		} catch (PatternSyntaxException e) {
+			// Syntax error in the regular expression
+			Log.e("UnlockCode", "Regex error");
 			e.printStackTrace();
 		}
+
+		// Now we delete the temporary file
+		shell.sendShellCommand(new String[] { "su", "-c",
+				"rm " + NV_DATA_TEMP_FILE });
 		return unlockCode;
 	}
 
-	private String extractUnlockCode(String hexString) {
+	public static String extractUnlockCode(String hexString) {
 		Log.i("UnlockCode", "Extracting Unlock Code");
 		String hexByte = "";
 		String result = "";

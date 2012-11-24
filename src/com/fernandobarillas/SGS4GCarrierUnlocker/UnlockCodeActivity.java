@@ -27,7 +27,7 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("myid", "Activity: UnlockCodeActivity");
+		Log.i("UnlockCodeActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_unlock_code);
 

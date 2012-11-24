@@ -2,8 +2,11 @@ package com.fernandobarillas.SGS4GCarrierUnlocker;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import android.util.Log;
 
 public class HexUtils {
 
@@ -14,9 +17,14 @@ public class HexUtils {
 	public static String bytesToHexString(byte[] bytes) {
 		final char[] hexArray = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
 				'9', 'A', 'B', 'C', 'D', 'E', 'F' };
-		char[] hexChars = new char[bytes.length * 2];
 		int currentByte;
 
+		if (bytes == null) {
+			/* No hex string if the byte array is null */
+			return "";
+		}
+
+		char[] hexChars = new char[bytes.length * 2];
 		for (int j = 0; j < bytes.length; j++) {
 			currentByte = bytes[j] & 0xFF;
 			hexChars[j * 2] = hexArray[currentByte >>> 4];
@@ -28,14 +36,27 @@ public class HexUtils {
 
 	// Method from the Example Depot
 	// http://www.exampledepot.com/egs/java.io/file2bytearray.html
-	public static byte[] getBytesFromFile(File file) throws IOException {
-		InputStream inputStream = new FileInputStream(file);
+	public static byte[] getBytesFromFile(File file) {
+		InputStream inputStream;
+		try {
+			inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			Log.e("HexUtils",
+					"Could not find the file to write to: " + file.getName());
+			return new byte[0];
+		}
 		long length = file.length();
 
 		// Check to ensure that file is not larger than Integer.MAX_VALUE.
 		if (length > Integer.MAX_VALUE) {
 			// File is too large, return empty byte array
-			inputStream.close();
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				Log.e("HexUtils", "Could not find the file to write to: "
+						+ file.getName());
+				return new byte[0];
+			}
 			return new byte[0];
 		}
 
@@ -43,17 +64,22 @@ public class HexUtils {
 		byte[] bytes = new byte[(int) length];
 		int offset = 0;
 		int numRead = 0;
-		while (offset < bytes.length
-				&& (numRead = inputStream.read(bytes, offset, bytes.length
-						- offset)) >= 0) {
-			offset += numRead;
+		try {
+			while (offset < bytes.length
+					&& (numRead = inputStream.read(bytes, offset, bytes.length
+							- offset)) >= 0) {
+				offset += numRead;
+			}
+			inputStream.close();
+		} catch (IOException e) {
+			Log.e("HexUtils", "Error while reading: " + file.getName());
+			return new byte[0];
 		}
-		inputStream.close();
 
 		// Ensure all the bytes have been read in
 		if (offset < bytes.length) {
-			throw new IOException("Could not completely read file "
-					+ file.getName());
+			/* Error occurred, return an empty array */
+			return new byte[0];
 		}
 
 		return bytes;
