@@ -10,14 +10,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.xdatv.xdasdk.Shell;
-
 public class UnlockCode {
 	static String STORAGE_PATH_ROOT = Environment.getExternalStorageDirectory()
 			.getPath();
 	static String NV_DATA_FILE;
 	static String OUTPUT_FILE = STORAGE_PATH_ROOT + "/unlockcode.txt";
 	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
+	Shell SHELL = new Shell();
 
 	public UnlockCode() {
 		Log.i("UnlockCode", "UnlockCode instantiated");
@@ -54,13 +53,11 @@ public class UnlockCode {
 		Log.i("UnlockCode", "Getting Unlock Code");
 		String unlockCode = "";
 		byte[] byteArray;
-		Shell shell = new Shell();
 
 		// Copy over the nv_data.bin file from the default location to a
 		// temporary location
 		Log.i("UnlockCode", "Getting SU permissions");
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
+		SHELL.sendCommand("cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE);
 
 		// Now we can convert it to a hex string
 		byteArray = HexUtils.getBytesFromFile(new File(NV_DATA_TEMP_FILE));
@@ -87,8 +84,7 @@ public class UnlockCode {
 		}
 
 		// Now we delete the temporary file
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"rm " + NV_DATA_TEMP_FILE });
+		SHELL.sendCommand("rm " + NV_DATA_TEMP_FILE);
 		return unlockCode;
 	}
 

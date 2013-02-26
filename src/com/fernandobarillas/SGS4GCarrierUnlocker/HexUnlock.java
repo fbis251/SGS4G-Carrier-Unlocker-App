@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.xdatv.xdasdk.Shell;
-
 import android.os.Environment;
 import android.util.Log;
 
@@ -19,7 +17,7 @@ public class HexUnlock {
 	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
 	static String HEX_STRING;
 	static String LOCK_STATUS;
-	static Shell shell = new Shell();
+	static Shell SHELL = new Shell();
 
 	public HexUnlock() {
 		updateHexString();
@@ -83,7 +81,7 @@ public class HexUnlock {
 
 			f.write(byteArray);
 			f.close();
-			updateNvFile();
+			updateOriginalNvFile();
 		} catch (IOException e) {
 			return false;
 		}
@@ -136,20 +134,16 @@ public class HexUnlock {
 
 	private void cleanNvTempFile() {
 		Log.i("HexUnlock", "Deleting temp file");
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"rm " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5 });
+		SHELL.sendCommand("rm -f " + NV_DATA_TEMP_FILE + " " + NV_DATA_FILE_MD5);
 	}
 
 	private void updateNvTempFile() {
 		Log.i("HexUnlock", "Updating nv_data temp file");
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE });
+		SHELL.sendCommand("cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE);
 	}
 
-	private void updateNvFile() {
+	private void updateOriginalNvFile() {
 		Log.i("HexUnlock", "Updating nv_data /efs file");
-		shell.sendShellCommand(new String[] { "su", "-c",
-				"cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE });
+		SHELL.sendCommand("cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE);
 	}
-
 }

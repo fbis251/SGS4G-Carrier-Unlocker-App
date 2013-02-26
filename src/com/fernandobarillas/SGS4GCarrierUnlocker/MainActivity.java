@@ -1,5 +1,8 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
+import java.io.IOException;
+
+import com.stericson.RootTools.RootTools;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ public class MainActivity extends TabActivity {
 		setContentView(R.layout.main);
 
 		// Initialize variables
+		RootTools.debugMode = false;
 		tabUnlockCode = getString(R.string.tab_unlock_code);
 		tabHexUnlock = getString(R.string.tab_hex_unlock);
 		tabEfsTools = getString(R.string.tab_efs_tools);
@@ -86,6 +90,10 @@ public class MainActivity extends TabActivity {
 	}
 
 	public void terminate() {
+		try {
+			RootTools.closeAllShells();
+		} catch (IOException e) {
+		}
 		super.onDestroy();
 		this.finish();
 		Log.i("MainActivity", "Application successfully terminated!");
