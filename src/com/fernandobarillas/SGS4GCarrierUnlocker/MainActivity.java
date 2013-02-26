@@ -57,7 +57,8 @@ public class MainActivity extends TabActivity {
 		// Now we add all the tabs
 		tabHost.addTab(tabUnlockCodeSpec);
 		tabHost.addTab(hexUnlockSpec);
-		tabHost.addTab(efsToolsSpec);
+		// TODO: Work on EFS backup/restore
+		// tabHost.addTab(efsToolsSpec);
 	}
 
 	// Parse menu.xml
@@ -80,10 +81,11 @@ public class MainActivity extends TabActivity {
 		case R.id.exit:
 			terminate();
 			return true;
-		case R.id.settings:
-			Intent settingsIntent = new Intent(this, SettingsActivity.class);
-			startActivity(settingsIntent);
-			return true;
+			// TODO: Add settings implementation that works in GB roms too
+			// case R.id.settings:
+			// Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			// startActivity(settingsIntent);
+			// return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

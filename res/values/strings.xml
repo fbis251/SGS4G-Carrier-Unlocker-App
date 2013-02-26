@@ -2,9 +2,7 @@
 <resources>
 
     <string name="app_name">SGS4G Unlocker</string>
-    <string name="text_about">This application was created by\n
-        Fernando Barillas\n
-        &#169;2012</string>
+    <string name="text_about">This application was created by\nFernando Barillas (&#169;2012&#8211;2013)</string>
     <string name="unlock_button_text">Get Unlock Code</string>
     <string name="please_wait">Working… Please wait.</string>
     <string name="nv_data_file">/efs/root/afs/settings/nv_data.bin</string>

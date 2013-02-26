@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!--
+    TODO: Add settings that work in GB too
     <item
         android:id="@+id/settings"
         android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>
+    -->
 
     <item
         android:id="@+id/about"
