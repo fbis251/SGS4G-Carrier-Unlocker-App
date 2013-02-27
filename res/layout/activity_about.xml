@@ -5,7 +5,7 @@
     android:gravity="top" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/about_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -15,10 +15,11 @@
         tools:context=".AboutActivity" />
 
     <TextView
+        android:id="@+id/about_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/about_title"
         android:padding="@dimen/padding_medium"
         android:text="@string/text_about" />
 

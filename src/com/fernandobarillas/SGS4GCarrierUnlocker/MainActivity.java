@@ -57,8 +57,7 @@ public class MainActivity extends TabActivity {
 		// Now we add all the tabs
 		tabHost.addTab(tabUnlockCodeSpec);
 		tabHost.addTab(hexUnlockSpec);
-		// TODO: Work on EFS backup/restore
-		// tabHost.addTab(efsToolsSpec);
+		tabHost.addTab(efsToolsSpec);
 	}
 
 	// Parse menu.xml
@@ -96,7 +95,6 @@ public class MainActivity extends TabActivity {
 			RootTools.closeAllShells();
 		} catch (IOException e) {
 		}
-		super.onDestroy();
 		this.finish();
 		Log.i("MainActivity", "Application successfully terminated!");
 		System.exit(0);
