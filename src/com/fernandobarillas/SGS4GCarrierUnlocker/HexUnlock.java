@@ -21,7 +21,6 @@ public class HexUnlock {
 
 	public HexUnlock() {
 		updateHexString();
-		System.out.println("Lock status: " + LOCK_STATUS);
 	}
 
 	public boolean doHexEdit(String state) {
@@ -104,6 +103,7 @@ public class HexUnlock {
 		String returnString = "";
 		Pattern regexLocked = Pattern.compile("FF0100000000([0-9A-F]{16})FF");
 		Matcher regexMatcherLocked = regexLocked.matcher(HEX_STRING);
+
 		while (regexMatcherLocked.find()) {
 			if (UnlockCode.extractUnlockCode(regexMatcherLocked.group(1)) != "") {
 				// We have a find if we can get an unlock code

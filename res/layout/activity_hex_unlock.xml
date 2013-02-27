@@ -13,6 +13,7 @@
 
     <TextView
         android:id="@+id/hex_unlock_result_view"
+        android:textIsSelectable="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

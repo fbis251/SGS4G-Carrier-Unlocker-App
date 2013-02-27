@@ -12,11 +12,14 @@ public class HexUnlockActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// TODO: Add some kind of progress dialog for lock/unlock procedure
+
+		final HexUnlock hexUnlock = new HexUnlock();
+		String lockStatus = hexUnlock.getLockStatus();
+
 		Log.i("HexUnlockActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hex_unlock);
-		final HexUnlock hexUnlock = new HexUnlock();
-		String lockStatus = hexUnlock.getLockStatus();
 
 		textView = (TextView) this.findViewById(R.id.hex_unlock_result_view);
 		textView.setText(lockStatus);
