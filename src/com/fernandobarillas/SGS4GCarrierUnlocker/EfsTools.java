@@ -1,7 +1,17 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
+import android.os.Environment;
+
 public class EfsTools {
 	static Shell SHELL;
+	static String STORAGE_PATH_ROOT = Environment.getExternalStorageDirectory()
+			.getPath();
+	// TODO: Change BACKUP_PATH to user defined location if available, making
+	// sure that any existing backups get moved to the new location
+	static String BACKUP_PATH = STORAGE_PATH_ROOT;
+	static String BACKUP_FILENAME = "efs_backup.tar";
+	static String BACKUP_TAR = BACKUP_PATH + "/" + BACKUP_FILENAME;
+	static String BACKUP_TAR_MD5 = BACKUP_TAR + ".md5";
 
 	public EfsTools() {
 		SHELL = new Shell();
@@ -15,9 +25,10 @@ public class EfsTools {
 
 		// TODO: Expand backup to something like cm9's updater.sh to save
 		// backups that were already made.
-		SHELL.sendCommand("cd / && busybox tar cvf /sdcard/test/backup.tar /efs && cd /sdcard/test && busybox md5sum backup.tar > backup.tar.md5");
-		// System.out.println("RESULT = " + SHELL.lastExitStatus() + "\n" +
-		// SHELL);
+		SHELL.sendCommand("cd / && " + "busybox tar cvf " + BACKUP_TAR
+				+ " /efs && cd " + BACKUP_PATH + " && busybox md5sum "
+				+ BACKUP_FILENAME + " > " + BACKUP_TAR_MD5);
+
 		if (SHELL.lastExitStatus() == 0)
 			result = true;
 
@@ -28,7 +39,8 @@ public class EfsTools {
 	public boolean doEfsRestore() {
 		boolean result = false;
 
-		SHELL.sendCommand("cd /sdcard/test && md5sum -c backup.tar.md5 && cd / && tar xvf /sdcard/test/backup.tar");
+		SHELL.sendCommand("cd " + BACKUP_PATH + " && md5sum -c "
+				+ BACKUP_TAR_MD5 + " && cd / && tar xvf " + BACKUP_TAR);
 		if (SHELL.lastExitStatus() == 0)
 			result = true;
 		System.out.println("efs RESTORE result = " + result);
