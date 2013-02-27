@@ -4,19 +4,31 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/efs_tools_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
         android:text="@string/efs_tools_instructions" />
 
+    <TextView
+        android:id="@+id/efs_tools_result_view"
+        android:textIsSelectable="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/efs_tools_title"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_small"
+        android:gravity="center_vertical|center_horizontal" />
+
     <Button
         android:id="@+id/efs_backup_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/efs_tools_result_view"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
         android:text="@string/efs_backup_button" />
