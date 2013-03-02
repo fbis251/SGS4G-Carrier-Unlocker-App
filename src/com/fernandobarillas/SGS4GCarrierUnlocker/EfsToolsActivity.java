@@ -1,27 +1,33 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.app.Activity;
 
-public class EfsToolsActivity extends Activity {
+public class EfsToolsActivity extends SherlockFragment {
 	static EfsTools EFS_TOOLS;
 	static TextView textView;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		Log.i("EfsToolsActivity", "Instantiated");
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_efs_tools);
+		View view = inflater.inflate(R.layout.activity_efs_tools, container,
+				false);
 
-		textView = (TextView) this.findViewById(R.id.efs_tools_result_view);
+		textView = (TextView) view.findViewById(R.id.efs_tools_result_view);
 		textView.setText("");
 
-		final Button efsBackupButton = (Button) findViewById(R.id.efs_backup_button);
-		final Button efsRestoreButton = (Button) findViewById(R.id.efs_restore_button);
+		final Button efsBackupButton = (Button) view
+				.findViewById(R.id.efs_backup_button);
+		final Button efsRestoreButton = (Button) view
+				.findViewById(R.id.efs_restore_button);
 		EFS_TOOLS = new EfsTools();
 
 		efsBackupButton.setOnClickListener(new View.OnClickListener() {
@@ -58,5 +64,7 @@ public class EfsToolsActivity extends Activity {
 				efsRestoreButton.setEnabled(true);
 			}
 		});
+
+		return view;
 	}
 }

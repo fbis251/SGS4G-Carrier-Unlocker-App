@@ -1,17 +1,21 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class HexUnlockActivity extends Activity {
+public class HexUnlockActivity extends SherlockFragment {
 	static TextView textView;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// TODO: Add some kind of progress dialog for lock/unlock procedure
 
 		final HexUnlock hexUnlock = new HexUnlock();
@@ -19,13 +23,16 @@ public class HexUnlockActivity extends Activity {
 
 		Log.i("HexUnlockActivity", "Instantiated");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_hex_unlock);
+		View view = inflater.inflate(R.layout.activity_hex_unlock, container,
+				false);
 
-		textView = (TextView) this.findViewById(R.id.hex_unlock_result_view);
+		textView = (TextView) view.findViewById(R.id.hex_unlock_result_view);
 		textView.setText(lockStatus);
 
-		final Button hexUnlockButton = (Button) findViewById(R.id.hex_unlock_button);
-		final Button hexLockButton = (Button) findViewById(R.id.hex_lock_button);
+		final Button hexUnlockButton = (Button) view
+				.findViewById(R.id.hex_unlock_button);
+		final Button hexLockButton = (Button) view
+				.findViewById(R.id.hex_lock_button);
 
 		if (lockStatus == "unlocked") {
 			hexUnlockButton.setEnabled(false);
@@ -35,6 +42,7 @@ public class HexUnlockActivity extends Activity {
 
 		hexUnlockButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				// TODO: Make sure you warn the user if a backup isn't detected
 				// We don't want users repeatedly tapping the button
 				hexUnlockButton.setEnabled(false);
 				hexUnlock.doHexEdit("unlocked");
@@ -52,6 +60,7 @@ public class HexUnlockActivity extends Activity {
 				hexUnlockButton.setEnabled(true);
 			}
 		});
-	}
 
+		return view;
+	}
 }

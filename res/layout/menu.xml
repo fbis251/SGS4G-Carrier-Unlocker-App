@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!--
-    TODO: Add settings that work in GB too
-    <item
+    // TODO: Get this ready for GB
+         <item
         android:id="@+id/settings"
         android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>

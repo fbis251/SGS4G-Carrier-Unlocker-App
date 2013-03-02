@@ -1,16 +1,19 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class UnlockCodeActivity extends Activity implements Runnable {
+public class UnlockCodeActivity extends SherlockFragment implements Runnable {
 	String pleaseWait;
 	String outputFile;
 	String nvDataFile;
@@ -26,10 +29,12 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 	static ProgressDialog processDialog;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO: Save state upon rotation
 		Log.i("UnlockCodeActivity", "Instantiated");
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_unlock_code);
+		View view = inflater.inflate(R.layout.activity_unlock_code, container,
+				false);
 
 		// Initialize variables
 		pleaseWait = getString(R.string.please_wait);
@@ -42,7 +47,7 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 		unlockCodeNotSaved = getString(R.string.unlock_code_not_saved);
 
 		// Set the resultText view for use by other methods
-		textView = (TextView) this.findViewById(R.id.unlock_code_result_view);
+		textView = (TextView) view.findViewById(R.id.unlock_code_result_view);
 
 		// Add a complete path to external storage
 		outputFile = UnlockCode.STORAGE_PATH_ROOT + outputFile;
@@ -51,17 +56,19 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 
 		// This is our main button! Basically only here so the user will need to
 		// do something before the superuser request
-		final Button unlockButton = (Button) findViewById(R.id.unlock_button);
+		final Button unlockButton = (Button) view
+				.findViewById(R.id.unlock_button);
 		unlockButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// We don't want users repeatedly tapping the button
 				unlockButton.setEnabled(false);
 
 				// Tell the user to chill while we do our thing
-				processDialog = new ProgressDialog(UnlockCodeActivity.this);
-				processDialog.setMessage(pleaseWait);
-				processDialog.setCancelable(false);
-				processDialog.show();
+				// TODO: Fix progress dialog!
+				// processDialog = new ProgressDialog(UnlockCodeActivity.this);
+				// processDialog.setMessage(pleaseWait);
+				// processDialog.setCancelable(false);
+				// processDialog.show();
 
 				// We start the unlocking process in another thread so the UI
 				// can update while it waits for the result
@@ -69,6 +76,8 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 				thread.start();
 			}
 		});
+
+		return view;
 	}
 
 	// Process Dialog
@@ -97,7 +106,7 @@ public class UnlockCodeActivity extends Activity implements Runnable {
 		@Override
 		public void handleMessage(Message msg) {
 			// We don't need the dialog anymore
-			processDialog.dismiss();
+			// processDialog.dismiss();
 			textView.setText(resultText);
 		}
 	};

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!--
+    // TODO: Convert this to a checkbox and compatible with GB
+    
     <PreferenceCategory android:title="@string/preference_category_output_title" >
         <SwitchPreference
             android:defaultValue="true"
@@ -17,6 +19,9 @@
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/preference_output_filename_summary"
             android:title="@string/preference_output_filename_title" />
-    </PreferenceCategory>
+
+        <PreferenceCategory>
+        </PreferenceCategory>
+    -->
 
 </PreferenceScreen>
