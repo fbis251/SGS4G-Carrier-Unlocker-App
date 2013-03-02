@@ -1,6 +1,7 @@
 package com.fernandobarillas.SGS4GCarrierUnlocker;
 
 import android.os.Environment;
+import android.util.Log;
 
 public class EfsTools {
 	static Shell SHELL;
@@ -14,6 +15,8 @@ public class EfsTools {
 	static String BACKUP_TAR_MD5 = BACKUP_TAR + ".md5";
 
 	public EfsTools() {
+		Log.i("EfsTools", "EfsTools instantiated");
+
 		SHELL = new Shell();
 		if (!SHELL.checkBusybox()) {
 			// TODO: Send some kind of warning to user here
@@ -21,34 +24,45 @@ public class EfsTools {
 	}
 
 	public boolean doEfsBackup() {
+		Log.i("EfsTools", "doEfsBackup()");
+
 		boolean result = false;
 
 		// TODO: Expand backup to something like cm9's updater.sh to save
 		// backups that were already made.
-		SHELL.sendCommand("cd / && " + "busybox tar cvf " + BACKUP_TAR
-				+ " /efs && cd " + BACKUP_PATH + " && busybox md5sum "
-				+ BACKUP_FILENAME + " > " + BACKUP_TAR_MD5);
+		Log.i("EfsTools", "Sending backup command");
+
+		SHELL.sendCommand("busybox mkdir -p " + BACKUP_PATH + " && cd / && "
+				+ "busybox tar cf " + BACKUP_TAR + " /efs && cd " + BACKUP_PATH
+				+ " && busybox md5sum " + BACKUP_FILENAME + " > "
+				+ BACKUP_TAR_MD5);
 
 		if (SHELL.lastExitStatus() == 0)
 			result = true;
 
-		System.out.println("efs BACKUP result = " + result);
+		Log.i("EfsTools", "Backup result = " + result);
 		return result;
 	}
 
 	public boolean doEfsRestore() {
+		Log.i("EfsTools", "doEfsRestore()");
+
 		boolean result = false;
 
+		Log.i("EfsTools", "Sending restore command");
 		SHELL.sendCommand("cd " + BACKUP_PATH + " && md5sum -c "
-				+ BACKUP_TAR_MD5 + " && cd / && tar xvf " + BACKUP_TAR);
+				+ BACKUP_TAR_MD5 + " && cd / && tar xf " + BACKUP_TAR);
+
 		if (SHELL.lastExitStatus() == 0)
 			result = true;
-		System.out.println("efs RESTORE result = " + result);
+
+		Log.i("EfsTools", "Restore result = " + result);
 
 		return result;
 	}
 
 	public boolean isBackupAvailable() {
+		Log.i("EfsTools", "isBackupAvailable()");
 		// TODO: Check if backup exists
 		return false;
 	}
