@@ -61,9 +61,6 @@ public class Shell {
 				|| (checkRoot() && RootTools.isBusyboxAvailable())) {
 			result = true;
 			BUSYBOX_INSTALLED = true;
-			System.out.println("We've got root access and busybox found!!!");
-		} else {
-			System.out.println("Busybox not found :(");
 		}
 
 		return result;
