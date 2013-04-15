@@ -51,8 +51,6 @@ public class UnlockCodeActivity extends SherlockFragment implements Runnable {
 
 		// Add a complete path to external storage
 		outputFile = UnlockCode.STORAGE_PATH_ROOT + outputFile;
-		unlockCodeObject = new UnlockCode(nvDataFile, outputFile,
-				nvDataTempFile);
 
 		// This is our main button! Basically only here so the user will need to
 		// do something before the superuser request
@@ -84,6 +82,10 @@ public class UnlockCodeActivity extends SherlockFragment implements Runnable {
 	// run and handler modified from
 	// http://www.helloandroid.com/tutorials/using-threads-and-progressdialog
 	public void run() {
+		if (unlockCodeObject == null) {
+			unlockCodeObject = new UnlockCode(nvDataFile, outputFile,
+					nvDataTempFile);
+		}
 		unlockCode = unlockCodeObject.getUnlockCode();
 
 		if (unlockCode != "") {
@@ -110,5 +112,4 @@ public class UnlockCodeActivity extends SherlockFragment implements Runnable {
 			textView.setText(resultText);
 		}
 	};
-
 }

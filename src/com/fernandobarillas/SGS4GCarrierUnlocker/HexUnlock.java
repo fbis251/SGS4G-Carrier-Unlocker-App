@@ -100,7 +100,7 @@ public class HexUnlock {
 
 	/* Returns true if unlocked, false if locked */
 	public String getLockStatus() {
-		String returnString = "";
+		String returnString = "Unknown";
 		Pattern regexLocked = Pattern.compile("FF0100000000([0-9A-F]{16})FF");
 		Matcher regexMatcherLocked = regexLocked.matcher(HEX_STRING);
 
@@ -145,5 +145,25 @@ public class HexUnlock {
 	private void updateOriginalNvFile() {
 		Log.i("HexUnlock", "Updating nv_data /efs file");
 		SHELL.sendCommand("cat " + NV_DATA_TEMP_FILE + " > " + NV_DATA_FILE);
+	}
+
+	private boolean createShell() {
+		Log.i("HexUnlock", "createShell()");
+		if (SHELL == null) {
+			SHELL = new Shell();
+
+			if (!SHELL.checkRoot()) {
+				Log.i("HexUnlock", "createShell() Root unvailable");
+				return false;
+			}
+
+			if (!SHELL.checkBusybox()) {
+				// TODO: Send some kind of warning to user here
+				Log.i("HexUnlock", "createShell() Busybox unvailable");
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

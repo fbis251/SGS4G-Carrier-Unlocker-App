@@ -16,7 +16,7 @@ public class UnlockCode {
 	static String NV_DATA_FILE;
 	static String OUTPUT_FILE = STORAGE_PATH_ROOT + "/unlockcode.txt";
 	static String NV_DATA_TEMP_FILE = STORAGE_PATH_ROOT + "/nv_data.bin";
-	Shell SHELL = new Shell();
+	static Shell SHELL;
 
 	public UnlockCode() {
 		Log.i("UnlockCode", "UnlockCode instantiated");
@@ -57,6 +57,8 @@ public class UnlockCode {
 		// Copy over the nv_data.bin file from the default location to a
 		// temporary location
 		Log.i("UnlockCode", "Getting SU permissions");
+		createShell();
+
 		SHELL.sendCommand("cat " + NV_DATA_FILE + " > " + NV_DATA_TEMP_FILE);
 
 		// Now we can convert it to a hex string
@@ -156,5 +158,15 @@ public class UnlockCode {
 		}
 
 		return returnStatus;
+	}
+
+	private void createShell() {
+		Log.i("UnlockCode", "createShell()");
+		if (SHELL == null) {
+			SHELL = new Shell();
+			if (!SHELL.checkBusybox()) {
+				// TODO: Send some kind of warning to user here
+			}
+		}
 	}
 }

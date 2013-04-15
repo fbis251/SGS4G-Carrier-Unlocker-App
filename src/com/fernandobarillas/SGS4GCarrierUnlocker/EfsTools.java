@@ -15,22 +15,20 @@ public class EfsTools {
 	static String BACKUP_TAR_MD5 = BACKUP_TAR + ".md5";
 
 	public EfsTools() {
-		Log.i("EfsTools", "EfsTools instantiated");
-
-		SHELL = new Shell();
-		if (!SHELL.checkBusybox()) {
-			// TODO: Send some kind of warning to user here
-		}
+		Log.i("EfsTools", "Instantiated");
 	}
 
 	public boolean doEfsBackup() {
 		Log.i("EfsTools", "doEfsBackup()");
-
 		boolean result = false;
+
+		if (!createShell()) {
+			return false;
+		}
 
 		// TODO: Expand backup to something like cm9's updater.sh to save
 		// backups that were already made.
-		Log.i("EfsTools", "Sending backup command");
+		Log.i("EfsTools", "Attempting backup");
 
 		SHELL.sendCommand("busybox mkdir -p " + BACKUP_PATH + " && cd / && "
 				+ "busybox tar cf " + BACKUP_TAR + " /efs && cd " + BACKUP_PATH
@@ -46,8 +44,10 @@ public class EfsTools {
 
 	public boolean doEfsRestore() {
 		Log.i("EfsTools", "doEfsRestore()");
-
 		boolean result = false;
+
+		if (!createShell())
+			return result;
 
 		Log.i("EfsTools", "Sending restore command");
 		SHELL.sendCommand("cd " + BACKUP_PATH + " && md5sum -c "
@@ -65,5 +65,25 @@ public class EfsTools {
 		Log.i("EfsTools", "isBackupAvailable()");
 		// TODO: Check if backup exists
 		return false;
+	}
+
+	private boolean createShell() {
+		Log.i("EfsTools", "createShell()");
+		if (SHELL == null) {
+			SHELL = new Shell();
+
+			if (!SHELL.checkRoot()) {
+				Log.i("EfsTools", "createShell() Root unvailable");
+				return false;
+			}
+
+			if (!SHELL.checkBusybox()) {
+				// TODO: Send some kind of warning to user here
+				Log.i("EfsTools", "createShell() Busybox unvailable");
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
