@@ -34,9 +34,13 @@ public class HexUnlockActivity extends SherlockFragment {
 		final Button hexLockButton = (Button) view
 				.findViewById(R.id.hex_lock_button);
 
+		// Disabled by default until we determine the lock status
+		hexLockButton.setEnabled(false);
+		hexUnlockButton.setEnabled(false);
+
 		if (lockStatus == "unlocked") {
 			hexUnlockButton.setEnabled(false);
-		} else {
+		} else if (lockStatus == "locked") {
 			hexLockButton.setEnabled(false);
 		}
 

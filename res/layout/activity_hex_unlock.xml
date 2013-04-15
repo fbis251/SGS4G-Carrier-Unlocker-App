@@ -12,15 +12,26 @@
         android:text="@string/hex_unlock_instructions" />
 
     <TextView
-        android:id="@+id/hex_unlock_result_view"
+        android:id="@+id/hex_unlock_result_title_view"
         android:textIsSelectable="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/text_view_hex_unlock_instructions"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_small"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/hex_unlock_result_title" />
+
+    <TextView
+        android:id="@+id/hex_unlock_result_view"
+        android:textIsSelectable="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/hex_unlock_result_title_view"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/padding_small"
         android:gravity="center_vertical|center_horizontal" />
 
     <Button

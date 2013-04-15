@@ -31,6 +31,7 @@
     <string name="hex_unlock_instructions">Use the buttons below to unlock/lock your phone. This tool allows you to unlock your phone without having to use an unlock code.\n
         Always create a backup before attempting an unlock!\n
     </string>
+    <string name="hex_unlock_result_title">Lock Status:</string>
     <string name="hex_unlock_button">Hex Unlock</string>
     <string name="hex_lock_button">Hex Lock</string>
     <string name="menu_settings">Settings</string>
