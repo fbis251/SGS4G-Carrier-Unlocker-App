@@ -7,11 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -22,18 +22,26 @@ import com.actionbarsherlock.view.MenuItem;
 import com.stericson.RootTools.RootTools;
 
 public class MainActivity extends SherlockFragmentActivity {
-	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter;
-	TextView tabCenter;
-	TextView tabText;
-	String tabUnlockCode;
-	String tabHexUnlock;
-	String tabEfsTools;
+	private ViewPager mViewPager;
+	private TabsAdapter mTabsAdapter;
+	protected String tabUnlockCode;
+	protected String tabHexUnlock;
+	protected String tabEfsTools;
+	private AppPreferences appPreferences;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i("MainActivity", "onCreate");
 		super.onCreate(savedInstanceState);
 		// TODO: Detect root and busybox and disable buttons until it's detected
+		FragmentManager fm = getSupportFragmentManager();
+		DialogFragment df = new DialogFragment();
+		appPreferences = new AppPreferences(getApplicationContext());
+
+		boolean firstrun = appPreferences.getFirstRunValue();
+		if (firstrun) {
+			df.show(fm, tabEfsTools);
+		}
 
 		// Initialize variables
 		RootTools.debugMode = false;
