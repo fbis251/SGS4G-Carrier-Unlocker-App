@@ -19,18 +19,24 @@
     <string name="unlock_code_saved">Your unlock code has been saved to:</string>
     <string name="unlock_code_not_saved">Your unlock code could not be saved to SD card</string>
     <string name="unlock_code_not_found">Your unlock code could not be found.\n\nAre you sure your phone is rooted and you have given the app SuperUser permissions?</string>
-    <string name="efs_tools_instructions">Instructions:\n
-        Always create a backup before any operations\n
-        1) Always create a backup before any operations\n
-        2) Press the button\n
-        3) Grant SuperUser permissions to the app\n
-        4) Wait a few seconds\n
-        5) Get your unlock code\n</string>
+    <string name="efs_tools_instructions">These buttons allow you to create a backup and restore the backup. The backup files are created on your SD card.\n
+        Instructions:\n
+        1) Press EFS Backup/Restore\n
+        2) Wait for the success message\n
+        3) Verify that a backup has been created at\n
+        /sdcard/efs_backup.tar\n
+        \n
+        If the backup fails, make sure you have an SD card inserted and you have busybox installed!</string>
     <string name="efs_backup_button">EFS Backup</string>
     <string name="efs_restore_button">EFS Restore</string>
-    <string name="hex_unlock_instructions">Use the buttons below to unlock/lock your phone. This tool allows you to unlock your phone without having to use an unlock code.\n
-        Always create a backup before attempting an unlock!\n
-    </string>
+    <string name="hex_unlock_instructions">Use the buttons below to unlock/lock your phone. This tool allows you to unlock your phone without having to use an unlock code.\n\n
+        Always create a backup before attempting an unlock!\n\n
+        Instructions:\n
+        1) Create a backup\n
+        2) Create a backup!\n
+        3) CREATE A BACKUP!\n
+        4) Press Hex Lock/Unlock\n
+        5) Restart your phone</string>
     <string name="hex_unlock_result_title">Lock Status:</string>
     <string name="hex_unlock_button">Hex Unlock</string>
     <string name="hex_lock_button">Hex Lock</string>
@@ -52,5 +58,9 @@
     <string name="preference_output_filename_summary">File will be saved under\n/sdcard/&lt;filename&gt;</string>
     <string name="preference_output_filename_title">File Name</string>
     <string name="title_activity_hex_unlock">HexUnlockActivity</string>
+    <string name="dialog_agreement_title">User Agreement</string>
+    <string name="dialog_agreement_text">By pressing "I Accept", I acknowledge that it is my responsibility to verify that cell phone unlocking is legal under my jurisdiction, and that I accept any and all responsibility from the repercussions of unlocking my cell phone.</string>
+    <string name="dialog_agreement_accept">I Accept</string>
+    <string name="dialog_agreement_decline">I Decline</string>
 
 </resources>
